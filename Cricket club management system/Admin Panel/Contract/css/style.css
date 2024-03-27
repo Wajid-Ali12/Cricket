@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins" sans-serif;
+}
+
+table {
+  margin-top: 100px;
+  width: 100%;
+  color: #070b11;
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  text-align: center;
+}
+
+th {
+  background-color: #355681;
+  color: white;
+  text-align: center;
+  font-size: 15px;
+}
+
+td {
+  border: 1px solid #090e14;
+}
+
+#contract-table {
+  width: 95%;
+}
+
+tr {
+  font-size: 13px;
+}
+
+tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #d4d2d2;
+  cursor: pointer;
+}
