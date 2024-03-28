@@ -1,4 +1,16 @@
-<?php  ?>
+<?php
+include('../Join/register.php');
+
+if (!isset($_SESSION['username'])) {
+  header("Location: ../Join/join.php");
+  exit();
+}
+include("../index.php");
+
+// Establish connection (if not already done)
+$conn = mysqli_connect("localhost", "root", "", "cricket");
+
+?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -24,16 +36,28 @@
       </div>
       <div class="collapse navbar-collapse" id="navbar-collapse-man">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="User/user.php">View Users</a></li>
-          <li><a href="Team/team.php">View Teams</a></li>
-          <li><a href="Contract/contract.php">View Contracts</a></li>
-          <li><a href="Club/club.php">View CLUB</a></li>
-          <li><a href="Player/player.php">View Playe</a></li>
+          <li><a href="../Team Information Form/teamInfoForm.php">TEAM</a></li>
+          <li><a href="../Contract Form/contractForm.php">CONTRACT</a></li>
+          <li><a href="../Club Registration Form/clubRegistration.php">CLUB</a></li>
+          <li><a href="../Player Registration Form/playerRegistration.php">PLAYER</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i></a>
+            <ul class="dropdown-menu" role="menu">
+
+              <?php
+              displayAdminNavbar();
+              ?>
+              <!-- <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li> -->
+              <li class="divider"></li>
+
+
+              <li><a href="../Profile/logout.php"><i class="glyphicon glyphicon-log-out"></i>&nbsp; Logout</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
-
 
 
   <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">

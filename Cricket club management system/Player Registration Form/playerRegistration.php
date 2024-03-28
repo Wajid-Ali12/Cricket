@@ -1,7 +1,15 @@
 <?php
-  include('../Join/register.php');
-  include('playerregister.php');
- ?>
+include('playerregister.php');
+include('../Join/register.php');
+if (!isset($_SESSION['username'])) {
+  header("Location: ../Join/join.php");
+  exit();
+}
+include("../index.php");
+
+// Establish connection (if not already done)
+$conn = mysqli_connect("localhost", "root", "", "cricket");
+?>
 
 
 <!DOCTYPE html>
@@ -13,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -34,14 +42,18 @@
           <li><a href="../Club Registration Form/clubRegistration.php">CLUB</a></li>
           <li><a class="active" href="../Player Registration Form/playerRegistration.php">PLAYER</a></li>
           <li class="dropdown">
-               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i></a>
-                <ul class="dropdown-menu" role="menu">
-                   <li class="divider"></li>
-                   <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li>
-                   <li class="divider"></li>
-                   <li><a href="../Profile/logout.php"><i class="glyphicon glyphicon-log-out"></i>&nbsp; Logout</a></li>
-                </ul>
-            </li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i></a>
+            <ul class="dropdown-menu" role="menu">
+
+              <?php
+              displayAdminNavbar();
+              ?>
+              <!-- <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li> -->
+              <li class="divider"></li>
+
+
+              <li><a href="../Profile/logout.php"><i class="glyphicon glyphicon-log-out"></i>&nbsp; Logout</a></li>
+          </li>
         </ul>
       </div>
     </div>

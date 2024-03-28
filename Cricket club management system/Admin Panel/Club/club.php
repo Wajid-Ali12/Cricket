@@ -1,3 +1,16 @@
+<?php
+include('../../Join/register.php');
+if (!isset($_SESSION['username'])) {
+  header("Location: ../../Join/join.php");
+  exit();
+}
+include("../../index.php");
+
+// Establish connection (if not already done)
+$conn = mysqli_connect("localhost", "root", "", "cricket");
+
+?>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -18,15 +31,28 @@
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href="../adminpanel.php"><img src="../../Landing Page/img/cricketlogo.png" alt=""></a>
+        <a class="navbar-brand" href="../Landing Page/homepage.php"><img src="../Landing Page/img/cricketlogo.png" alt=""></a>
       </div>
       <div class="collapse navbar-collapse" id="navbar-collapse-man">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="../User/user.php">User</a></li>
-          <li><a href="../Team/team.php">TEAM</a></li>
-          <li><a href="../Contract/contract.php">CONTRACT</a></li>
-          <li><a class="active" href="club.php">CLUB</a></li>
-          <li><a href="../Player/player.php">PLAYER</a></li>
+          <li><a href="../../Team Information Form/teamInfoForm.php">TEAM</a></li>
+          <li><a href="../../Contract Form/contractForm.php">CONTRACT</a></li>
+          <li><a href="../../Club Registration Form/clubRegistration.php">CLUB</a></li>
+          <li><a href="../../Player Registration Form/playerRegistration.php">PLAYER</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i></a>
+            <ul class="dropdown-menu" role="menu">
+
+              <?php
+              displayAdminNavbar();
+              ?>
+              <!-- <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li> -->
+              <li class="divider"></li>
+
+
+              <li><a href="../Profile/logout.php"><i class="glyphicon glyphicon-log-out"></i>&nbsp; Logout</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
@@ -34,8 +60,9 @@
 
   <table class="container">
     <tr>
-      <th>Id</th>
+      <th>ID</th>
       <th>Name of club</th>
+      <th>Location</th>
       <th>Post code</th>
       <th>President</th>
       <th>Register Date</th>
@@ -43,22 +70,14 @@
     </tr>
 
     <?php
-    $conn = mysqli_connect("localhost", "root", "", "cricket");
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['deleteClubId'])) {
+      $deleteId = $_POST['deleteClubId'];
+      $deleteQuery = "DELETE FROM clubreg WHERE id=$deleteId";
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editClubId'])) {
-      $id = $_POST['editClubId'];
-      $clubname = $_POST['editClubName'];
-      $location = $_POST['editClubLocation'];
-      $postcode = $_POST['editClubPostcode'];
-      $president = $_POST['editClubPresident'];
-      $regdate = $_POST['editClubRegdate'];
-
-      $sql = "UPDATE clubreg SET clubname='$clubname', location='$location', postcode='$postcode', president='$president', regdate='$regdate' WHERE id=$id";
-
-      if ($conn->query($sql) === TRUE) {
-        echo "Record updated successfully";
+      if ($conn->query($deleteQuery) === TRUE) {
+        echo "Record deleted successfully";
       } else {
-        echo "Error updating record: " . $conn->error;
+        echo "Error deleting record: " . $conn->error;
       }
     }
 
@@ -67,10 +86,11 @@
 
     if ($result->num_rows > 0) {
       while ($row = $result->fetch_assoc()) {
-        echo "<tr>";
+        echo "<tr id='row_" . $row["id"] . "'>";
         echo "<td>" . $row["id"] . "</td>";
         echo "<td>" . $row["clubname"] . "</td>";
-        echo "<td>" . $row["location"] . $row["postcode"] . "</td>";
+        echo "<td>" . $row["location"] .  "</td>";
+        echo "<td>" . $row["postcode"] .  "</td>";
         echo "<td>" . $row["president"] . "</td>";
         echo "<td>" . $row["regdate"] . "</td>";
         echo '<td>';
@@ -142,22 +162,24 @@
 
       function deleteClub(id) {
         if (confirm("Are you sure you want to delete this club?")) {
-          // Send AJAX request to delete the club
           $.ajax({
             type: 'POST',
-            url: '<?php echo $_SERVER["PHP_SELF"]; ?>',
+            url: '<?php echo $_SERVER["PHP_SELF"]; ?>', // Current script
             data: {
               deleteClubId: id
             },
             success: function(response) {
               // Remove the row from the table
               $('#row_' + id).remove();
+              alert("Club deleted successfully!"); // User feedback
             },
             error: function(xhr, status, error) {
               console.error(xhr.responseText);
+              alert("Error deleting club. Please try again."); // User feedback
             }
           });
         }
+        return false; // Prevent form submission
       }
     </script>
 

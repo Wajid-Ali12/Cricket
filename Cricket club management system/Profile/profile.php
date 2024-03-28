@@ -10,6 +10,9 @@
     // Establish database connection
     $conn = mysqli_connect("localhost", "root", "", "cricket");
 
+    include("../index.php");
+
+
     // Initialize success and error messages
     $successMessage = $errorMessage = '';
 
@@ -134,11 +137,9 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li class="divider"></li>
-                                <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li>
-                                <li class="divider"></li>
-
-                                <li><a href="../Profile/logout.php"><i class="glyphicon glyphicon-log-out"></i>&nbsp; Logout</a></li>
+                                <?php
+                                displayAdminNavbar();
+                                ?>
                             </ul>
                         </li>
                     </ul>

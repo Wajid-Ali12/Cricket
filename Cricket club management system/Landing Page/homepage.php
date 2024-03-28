@@ -5,29 +5,10 @@ if (!isset($_SESSION['username'])) {
   header("Location: ../Join/join.php");
   exit();
 }
+include("../index.php");
+
+// Establish connection (if not already done)
 $conn = mysqli_connect("localhost", "root", "", "cricket");
-
-// Initialize isAdmin variable
-$isAdmin = false;
-
-// Check if the user is logged in and retrieve isAdmin value
-if (isset($_SESSION['user_id'])) {
-  $userId = $_SESSION['user_id'];
-  $query = "SELECT isAdmin FROM profileinfo WHERE id = $userId";
-  $result = mysqli_query($conn, $query);
-
-  if ($result) {
-
-    if (mysqli_num_rows($result) > 0) {
-      $row = mysqli_fetch_assoc($result);
-      $isAdmin = $row['isAdmin'];
-    } else {
-      echo "No user found with id: $userId";
-    }
-  } else {
-    echo "Error: " . mysqli_error($conn);
-  }
-}
 
 ?>
 <!DOCTYPE html>
@@ -62,15 +43,9 @@ if (isset($_SESSION['user_id'])) {
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i></a>
             <ul class="dropdown-menu" role="menu">
 
-              <?php if ($isAdmin) : ?>
-
-                <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li>
-                <li><a href="../Admin Panel/User/user.php"><i class="fa-solid fa-circle-user"></i>&nbsp; View Users</a></li>
-                <li><a href="Team/team.php"><i class="fa-solid fa-people-group"></i>&nbsp; View Teams</a></li>
-                <li><a href="Contract/contract.php"><i class="fa-solid fa-address-book"></i>&nbsp; View Contracts</a></li>
-                <li><a href="../Admin Panel/Club/club.php"><i class="fa-solid fa-house-lock"></i>&nbsp; View CLUB</a></li>
-                <li><a href="Player/player.php">View Players</a></li>
-              <?php endif; ?>
+              <?php
+              displayAdminNavbar();
+              ?>
               <!-- <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li> -->
               <li class="divider"></li>
 
