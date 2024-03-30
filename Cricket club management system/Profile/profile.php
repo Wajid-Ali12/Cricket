@@ -1,7 +1,44 @@
     <?php
     // Start session to access session variables
     include('../Join/register.php');
+    function isAdmin($conn)
+    {
+        if (!$conn) {
+            die("Connection failed: " . mysqli_connect_error());
+        }
 
+        $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
+        if (!$userId) {
+            return false; // Not logged in
+        }
+
+        $query = "SELECT isAdmin FROM profileinfo WHERE id = ?";
+        $stmt = mysqli_prepare($conn, $query); // Prepare statement for security
+
+        if (!$stmt) {
+            die("Error preparing statement: " . mysqli_error($conn));
+        }
+
+        mysqli_stmt_bind_param($stmt, "i", $userId); // Bind user ID parameter
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if (!$result) {
+            die("Error getting result: " . mysqli_error($conn));
+        }
+
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $isAdmin = $row['isAdmin'];
+        } else {
+            $isAdmin = false; // No user found with ID
+        }
+
+        mysqli_stmt_close($stmt); // Close prepared statement
+
+        return $isAdmin;
+    }
     if (!isset($_SESSION['username'])) {
         header("Location: ../Join/join.php");
         exit();
@@ -9,8 +46,6 @@
     include('./profileregister.php');
     // Establish database connection
     $conn = mysqli_connect("localhost", "root", "", "cricket");
-
-    include("../index.php");
 
 
     // Initialize success and error messages
@@ -106,6 +141,8 @@
     // Get user's profile information
     $userProfile = getUserProfileInfo($conn, $_SESSION['user_id']);
 
+
+
     ?>
 
     <!DOCTYPE html>
@@ -118,7 +155,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
         <link rel="stylesheet" href="css/style.css">
     </head>
 
@@ -134,12 +172,20 @@
                         <li><a href="../Contract Form/contractForm.php">CONTRACT</a></li>
                         <li><a href="../Club Registration Form/clubRegistration.php">CLUB</a></li>
                         <li><a href="../Player Registration Form/playerRegistration.php">PLAYER</a></li>
+
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i></a>
                             <ul class="dropdown-menu" role="menu">
-                                <?php
-                                displayAdminNavbar();
-                                ?>
+                                <?php if (isAdmin($conn)) : ?>
+                                    <li><a href="../Admin Panel/User/user.php"><i class="fa-solid fa-circle-user"></i>&nbsp; View Users</a></li>
+                                    <li><a href="../Admin Panel/Team/team.php"><i class="fa-solid fa-people-group"></i>&nbsp; View Teams</a></li>
+                                    <li><a href="../Admin Panel/Contract/contract.php"><i class="fa-solid fa-address-book"></i>&nbsp; View Contracts</a></li>
+                                    <li><a href="../Admin Panel/Club/club.php"><i class="fa-solid fa-house-lock"></i>&nbsp; View CLUB</a></li>
+                                    <li><a href="../Admin Panel/Player/player.php">View Players</a></li>
+                                    <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li>
+                                <?php endif; ?>
+                                <li class="divider"></li>
+                                <li><a href="../Profile/logout.php"><i class="glyphicon glyphicon-log-out"></i>&nbsp; Logout</a></li>
                             </ul>
                         </li>
                     </ul>

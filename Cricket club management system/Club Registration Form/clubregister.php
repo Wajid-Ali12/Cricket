@@ -1,5 +1,6 @@
 <?php
-session_start();
+
+include('../Join/register.php');
 $db = mysqli_connect('localhost', 'root', '', 'cricket');
 
 $clubname = '';
