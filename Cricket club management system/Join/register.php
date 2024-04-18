@@ -2,9 +2,12 @@
 session_start();
 $db = mysqli_connect('localhost', 'root', '', 'cricket');
 
+
 if (!$db) {
     die("Connection failed: " . mysqli_connect_error());
 }
+
+
 
 $username = '';
 $email = '';
@@ -12,6 +15,10 @@ $password_1 = '';
 $password_2 = '';
 
 if (isset($_POST['register-button'])) {
+    // Retrieve and escape additional fields
+
+
+    // Retrieve and escape existing fields
     $username = mysqli_real_escape_string($db, $_POST['username']);
     $email = mysqli_real_escape_string($db, $_POST['email']);
     $password_1 = mysqli_real_escape_string($db, $_POST['password_1']);
@@ -25,12 +32,24 @@ if (isset($_POST['register-button'])) {
         echo "<script>alert('Username already taken. Please choose a different username.');</script>";
     } else {
         if ($password_1 == $password_2) {
-            // Insert the new user into the database
-            $insert_query = "INSERT INTO register (username, email, password) VALUES ('$username', '$email', '$password_1')";
-            $result = mysqli_query($db, $insert_query);
+            // Insert the new user into the register table
+            $insert_register_query = "INSERT INTO register (username, email, password) VALUES ('$username', '$email', '$password_1')";
+            $register_result = mysqli_query($db, $insert_register_query);
 
-            if ($result) {
-                echo "<script>alert('Registration successful. You can now login.');</script>";
+            if ($register_result) {
+                // Retrieve the user's ID from the register table
+                $id = mysqli_insert_id($db);
+
+                // Insert additional user info into profileinfo table
+                $insert_profile_query = "INSERT INTO profileinfo (id, firstname, lastname, age, mobile, address) VALUES ('$id', '$firstname', '$lastname', '$age', '$mobile', '$address')";
+                $profile_result = mysqli_query($db, $insert_profile_query);
+
+                if ($profile_result) {
+                    echo "<script>alert('Registration successful. You can now login.');</script>";
+                } else {
+                    error_log(mysqli_error($db));
+                    echo "<script>alert('Failed to insert additional profile information.');</script>";
+                }
             } else {
                 error_log(mysqli_error($db));
                 echo "<script>alert('Registration failed.');</script>";
@@ -40,6 +59,7 @@ if (isset($_POST['register-button'])) {
         }
     }
 }
+
 
 if (isset($_POST['login-button'])) {
     $username = mysqli_real_escape_string($db, trim($_POST['username']));

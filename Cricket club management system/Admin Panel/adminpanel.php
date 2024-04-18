@@ -5,7 +5,7 @@ if (!isset($_SESSION['username'])) {
   header("Location: ../Join/join.php");
   exit();
 }
-include("../index.php");
+
 
 // Establish connection (if not already done)
 $conn = mysqli_connect("localhost", "root", "", "cricket");
@@ -44,10 +44,8 @@ $conn = mysqli_connect("localhost", "root", "", "cricket");
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i></a>
             <ul class="dropdown-menu" role="menu">
 
-              <?php
-              displayAdminNavbar();
-              ?>
-              <!-- <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li> -->
+
+              <!-- -->
               <li class="divider"></li>
 
 

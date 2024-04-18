@@ -1,5 +1,6 @@
 <?php
 include('../../Join/register.php');
+
 function isAdmin($conn)
 {
   if (!$conn) {
@@ -38,6 +39,7 @@ function isAdmin($conn)
 
   return $isAdmin;
 }
+
 if (!isset($_SESSION['username'])) {
   header("Location: ../../Join/join.php");
   exit();
@@ -46,6 +48,21 @@ if (!isset($_SESSION['username'])) {
 // Establish connection (if not already done)
 $conn = mysqli_connect("localhost", "root", "", "cricket");
 
+// Handle delete request
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
+  $delete_id = $_POST['delete_id'];
+
+  // Delete the record from the database
+  $delete_query = "DELETE FROM register WHERE id=$delete_id";
+  if (mysqli_query($conn, $delete_query)) {
+    echo "<script>alert('Record deleted successfully');</script>";
+    // Redirect to user.php after deletion
+    echo "<script>window.location.href = 'user.php';</script>";
+    exit();
+  } else {
+    echo "Error deleting record: " . mysqli_error($conn);
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -60,7 +77,6 @@ $conn = mysqli_connect("localhost", "root", "", "cricket");
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
   <link rel="stylesheet" href="../../Landing Page/css/style.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -77,7 +93,6 @@ $conn = mysqli_connect("localhost", "root", "", "cricket");
           <li><a href="../../Contract Form/contractForm.php">CONTRACT</a></li>
           <li><a href="../../Club Registration Form/clubRegistration.php">CLUB</a></li>
           <li><a href="../../Player Registration Form/playerRegistration.php">PLAYER</a></li>
-
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i></a>
             <ul class="dropdown-menu" role="menu">
@@ -86,11 +101,11 @@ $conn = mysqli_connect("localhost", "root", "", "cricket");
                 <li><a href="../Team/team.php"><i class="fa-solid fa-people-group"></i>&nbsp; View Teams</a></li>
                 <li><a href="../Contract/contract.php"><i class="fa-solid fa-address-book"></i>&nbsp; View Contracts</a></li>
                 <li><a href="../Club/club.php"><i class="fa-solid fa-house-lock"></i>&nbsp; View CLUB</a></li>
-                <li><a href="../Player/player.php">View Players</a></li>
-                <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li>
+                <li><a href="../Player/player.php"><i class="fa-solid fa-circle-info"></i>View Players</a></li>
+
               <?php endif; ?>
               <li class="divider"></li>
-              <li><a href="../Profile/logout.php"><i class="glyphicon glyphicon-log-out"></i>&nbsp; Logout</a></li>
+              <li><a href="../../Profile/logout.php"><i class="glyphicon glyphicon-log-out"></i>&nbsp; Logout</a></li>
             </ul>
           </li>
         </ul>
@@ -103,30 +118,44 @@ $conn = mysqli_connect("localhost", "root", "", "cricket");
       <th>ID</th>
       <th>Username</th>
       <th>Email</th>
+      <th>Actions</th>
     </tr>
 
     <?php
-    $conn = mysqli_connect("localhost", "root", "", "cricket");
     $sql = "SELECT id, username, email FROM register";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
       while ($row = $result->fetch_assoc()) {
+        $userId = $row["id"];
+        $username = $row["username"];
+        $email = $row["email"];
 
-        echo "<tr><td>" . $row["id"] . "</td><td>" . $row["username"] . "</td><td>"
-          . $row["email"] . "</td></tr>";
+        echo "<tr><td>" . $userId . "</td><td>" . $username . "</td><td>" . $email . "</td>";
+
+        // Check if user is admin before showing actions
+        if (isAdmin($conn)) {
+          echo "<td>";
+          echo '<a href="../../Profile/profile.php?edit_id=' . $row['id'] . '" class="btn btn-primary btn-sm">Edit</a>';
+
+          echo "<form method='POST' style='display:inline; margin-left: 5px;'>";
+          echo "<input type='hidden' name='delete_id' value='" . $userId . "'>";
+          echo "<button type='submit' class='btn btn-danger btn-sm'>Delete</button>";
+          echo "</form>";
+          echo "</td>";
+        } else {
+          echo "<td>No Actions</td>";
+        }
+
+        echo "</tr>";
       }
       echo "</table>";
     } else {
-      echo "No member registerd yet.";
+      echo "No members registered yet.";
     }
-
-    $conn->close();
     ?>
+
   </table>
-
-
-
 </body>
 
 </html>

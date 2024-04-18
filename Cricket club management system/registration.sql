@@ -57,8 +57,7 @@ CREATE TABLE `profileinfo` (
   `age` int(2) NOT NULL,
   `mobile` int(15) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `address` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL
+  `address` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -66,8 +65,8 @@ CREATE TABLE `profileinfo` (
 -- Dumping data for table `profileinfo`
 --
 
-INSERT INTO `profileinfo` (`id`, `isAdmin`, `firstname`, `lastname`, `age`, `mobile`, `email`, `address`, `password`) VALUES
-(4,true, 'Maria', 'Aman', 22, 090078601, 'mara@gmail.com', 'DG kHan', '1234');
+INSERT INTO `profileinfo` (`id`, `isAdmin`, `firstname`, `lastname`, `age`, `mobile`, `email`, `address`) VALUES
+(4,true, 'Maria', 'Aman', 22, 090078601, 'mara@gmail.com', 'DG kHan');
 
 -- --------------------------------------------------------
 

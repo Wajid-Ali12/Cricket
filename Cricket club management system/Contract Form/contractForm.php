@@ -90,7 +90,7 @@ $conn = mysqli_connect("localhost", "root", "", "cricket");
                 <li><a href="../Admin Panel/Contract/contract.php"><i class="fa-solid fa-address-book"></i>&nbsp; View Contracts</a></li>
                 <li><a href="../Admin Panel/Club/club.php"><i class="fa-solid fa-house-lock"></i>&nbsp; View CLUB</a></li>
                 <li><a href="../Admin Panel/Player/player.php">View Players</a></li>
-                <li><a href="../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li>
+
               <?php endif; ?>
               <li class="divider"></li>
               <li><a href="../Profile/logout.php"><i class="glyphicon glyphicon-log-out"></i>&nbsp; Logout</a></li>

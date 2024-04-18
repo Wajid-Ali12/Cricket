@@ -85,8 +85,8 @@ $conn = mysqli_connect("localhost", "root", "", "cricket");
                 <li><a href="../Team/team.php"><i class="fa-solid fa-people-group"></i>&nbsp; View Teams</a></li>
                 <li><a href="../Contract/contract.php"><i class="fa-solid fa-address-book"></i>&nbsp; View Contracts</a></li>
                 <li><a href="../Club/club.php"><i class="fa-solid fa-house-lock"></i>&nbsp; View CLUB</a></li>
-                <li><a href="../Player/player.php">View Players</a></li>
-                <li><a href="../../Profile/profile.php"><i class="glyphicon glyphicon-user"></i>&nbsp; Profile</a></li>
+                <li><a href="../Player/player.php"><i class="fa-solid fa-circle-info"></i>View Players</a></li>
+
               <?php endif; ?>
               <li class="divider"></li>
               <li><a href="../Profile/logout.php"><i class="glyphicon glyphicon-log-out"></i>&nbsp; Logout</a></li>
