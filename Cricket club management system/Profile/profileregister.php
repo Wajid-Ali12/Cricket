@@ -25,7 +25,7 @@
 
     if($password_1 == $password_2){
 
-      $sql = "INSERT INTO profileinfo (firstname, lastname, age, mobile, email, address, password) VALUES ('$firstname', '$lastname', '$age', '$mobile', '$email', '$address', '$password_1')";
+      $sql = "INSERT INTO profileinfo (firstname, lastname, age, mobile, email, address,) VALUES ('$firstname', '$lastname', '$age', '$mobile', '$email', '$address')";
      mysqli_query($db, $sql);
     }
     }
